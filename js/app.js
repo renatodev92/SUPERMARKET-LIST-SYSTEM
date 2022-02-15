@@ -22,7 +22,6 @@ class Products {
         this.listaTabela();
         this.cancelar();
 
-
     }
 
     listaTabela() {
@@ -57,9 +56,6 @@ class Products {
 
             tdAcoes.appendChild(imgEdit)
             tdAcoes.appendChild(imgDelete)
-
-
-
 
         }
 
