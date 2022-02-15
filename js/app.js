@@ -3,6 +3,7 @@ class Products {
     constructor() {
         this.id = 1
         this.arrayProdutos = []
+        this.editId = null
 
     }
 
@@ -11,7 +12,11 @@ class Products {
         let produto = this.lerDados()
 
         if (this.validaCampos(produto) == true) {
-            this.adicionar(produto)
+            if (this.editId == null) {
+                this.adicionar(produto)
+            } else {
+                this.atualizar(this.editId, produto)
+            }
         }
 
         this.listaTabela();
@@ -42,27 +47,53 @@ class Products {
             tdQuantidade.innerText = this.arrayProdutos[i].quantidade
             tdValorTotal.innerText = this.arrayProdutos[i].total
 
-            let imgEdit = document.createElement('img')
+            let imgEdit = document.createElement("img")
             imgEdit.src = './img/edit.png'
+            imgEdit.setAttribute("onclick", "products.editar(" + JSON.stringify(this.arrayProdutos[i]) + ")");
 
-            let imgDelete = document.createElement('img')
+            let imgDelete = document.createElement("img")
             imgDelete.src = './img/del.png'
-
-            let imgAdd = document.createElement('img')
-            imgAdd.src = './img/add.png'
-
+            imgDelete.setAttribute("onclick", "products.deletar(" + this.arrayProdutos[i].id + ")")
 
             tdAcoes.appendChild(imgEdit)
             tdAcoes.appendChild(imgDelete)
-            tdAcoes.appendChild(imgAdd)
+
+
+
 
         }
 
     }
 
     adicionar(produto) {
+        // produto.preco = parseFloat(produto.preco)
         this.arrayProdutos.push(produto)
         this.id++
+
+    }
+
+    atualizar(id, produto) {
+        for (let i = 0; i < this.arrayProdutos.length; i++) {
+            if (this.arrayProdutos[i].id == id) {
+                this.arrayProdutos[i].nomeProduto = produto.nomeProduto
+                this.arrayProdutos[i].preco = produto.preco
+                this.arrayProdutos[i].quantidade = produto.quantidade
+                this.arrayProdutos[i].total = produto.total
+
+            }
+        }
+
+    }
+
+    editar(dados) {
+        this.editId = dados.id
+
+        document.getElementById('produto').value = dados.nomeProduto
+        document.getElementById('preco').value = dados.preco
+        document.getElementById('quantidade').value = dados.quantidade
+
+        document.getElementById('btn1').innerHTML = 'Atualizar'
+
 
     }
 
@@ -109,8 +140,27 @@ class Products {
         document.getElementById('preco').value = ""
         document.getElementById('quantidade').value = ""
 
+        document.getElementById('btn1').innerText = "Salvar"
+        this.editId = null
 
     }
+
+    deletar(id) {
+
+        if (confirm(`Deseja realmente deletar o produto? ${id}.`)) {
+
+            let tbody = document.getElementById('tbody')
+
+            for (let i = 0; i < this.arrayProdutos.length; i++) {
+                if (this.arrayProdutos[i].id == id) {
+                    this.arrayProdutos.splice(i, 1)
+                    tbody.deleteRow(i)
+                }
+            }
+        }
+    }
+
+
 }
 
 let products = new Products();
